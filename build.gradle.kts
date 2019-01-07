@@ -1,13 +1,16 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.serialization.js.DynamicTypeDeserializer.id
 
 plugins {
     kotlin("jvm") version "1.3.11"
+    `maven-publish`
 }
 
 group = "com.github.jntakpe"
-version = "1.0-SNAPSHOT"
+version = "0.1.0-SNAPSHOT"
 
 repositories {
+    mavenLocal()
     jcenter()
 }
 
@@ -38,3 +41,32 @@ tasks {
     }
 }
 
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+            pom {
+                name.set(project.name)
+                description.set("Provides a convenient way to document and test APIs with Spring REST Docs leveraging Kotlin DSL")
+                url.set("https://github.com/jntakpe/spring-restdocs-dsl")
+                licenses {
+                    license {
+                        name.set("The Apache License, Version 2.0")
+                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("jntakpe")
+                        name.set("Jocelyn NTAKPE")
+                    }
+                }
+                scm {
+                    connection.set("scm:git:git@github.com:jntakpe/spring-restdocs-dsl.git")
+                    developerConnection.set("scm:git:git@github.com:jntakpe/spring-restdocs-dsl.git")
+                    url.set("https://github.com/jntakpe/spring-restdocs-dsl/")
+                }
+            }
+        }
+    }
+}
