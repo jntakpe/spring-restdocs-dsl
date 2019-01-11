@@ -264,6 +264,9 @@ object RestDocsDSLSpec
                            assertThat(fields).hasSize(4)
                            assertThat(fields.map { it.type }).containsExactly(ARRAY, BOOLEAN, NUMBER, STRING)
                        }
+                       it("should create a primitive type array") {
+                           assertThat(root { array("primitiveArray", "") }.map { it.path }).containsExactly("primitiveArray")
+                       }
                        it("should create an array with nested json") {
                            val fields = list("Simple array") {
                                boolean("boolean", "description")

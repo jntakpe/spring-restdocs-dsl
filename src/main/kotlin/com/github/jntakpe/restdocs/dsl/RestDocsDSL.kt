@@ -27,13 +27,14 @@ internal interface Field {
 }
 
 @RestDocsMarker
-abstract class Nested(protected val basePath: String) {
+abstract class Nested(private val basePath: String) {
 
     val fields: MutableList<FieldDescriptor> = arrayListOf()
 
+    fun array(name: String, description: String, optional: Boolean = false) = field(Array(name, description, optional, arrayPath(name)))
+
     fun array(name: String, description: String, optional: Boolean = false, block: Array.() -> Unit): Array {
-        val fullPath = if (basePath.isEmpty()) "$name[]." else "$basePath$name[]."
-        return nested(Array(name, description, optional, fullPath), block)
+        return nested(Array(name, description, optional, arrayPath(name)), block)
     }
 
     fun boolean(name: String, description: String, optional: Boolean = false) = field(Bool(name, description, optional))
@@ -45,8 +46,7 @@ abstract class Nested(protected val basePath: String) {
     fun string(name: String, description: String, optional: Boolean = false) = field(Text(name, description, optional))
 
     fun json(name: String, description: String, optional: Boolean = false, block: Json.() -> Unit): Json {
-        val fullPath = if (basePath.isEmpty()) "$name." else "$basePath$name."
-        return nested(Json(name, description, optional, fullPath), block)
+        return nested(Json(name, description, optional, "$basePath$name."), block)
     }
 
     fun varies(name: String, description: String, optional: Boolean = false) = field(Varies(name, description, optional))
@@ -54,6 +54,8 @@ abstract class Nested(protected val basePath: String) {
     operator fun MutableCollection<in FieldDescriptor>.plusAssign(elements: Iterable<FieldDescriptor>) {
         addAll(elements.map { it.rebase() })
     }
+
+    private fun arrayPath(name: String) = "$basePath$name[]."
 
     private fun <T : Field> field(field: T): T = field.also { fields.add(field.build(basePath)) }
 
