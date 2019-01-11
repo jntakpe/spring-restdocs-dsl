@@ -32,9 +32,8 @@ abstract class Nested(protected val basePath: String) {
     val fields: MutableList<FieldDescriptor> = arrayListOf()
 
     fun array(name: String, description: String, optional: Boolean = false, block: Array.() -> Unit): Array {
-        val arrayName = "$name[]"
-        val fullPath = if (basePath.isEmpty()) "$arrayName." else "$basePath$arrayName."
-        return nested(Array(arrayName, description, optional, fullPath), block)
+        val fullPath = if (basePath.isEmpty()) "$name[]." else "$basePath$name[]."
+        return nested(Array(name, description, optional, fullPath), block)
     }
 
     fun boolean(name: String, description: String, optional: Boolean = false) = field(Bool(name, description, optional))

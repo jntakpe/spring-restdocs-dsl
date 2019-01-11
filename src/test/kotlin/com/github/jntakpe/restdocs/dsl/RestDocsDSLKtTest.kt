@@ -37,7 +37,7 @@ object RestDocsDSLSpec
                            }
                            assertThat(fields).hasSize(1)
                            val field = fields.first()
-                           assertThat(field.path).isEqualTo("$name[]")
+                           assertThat(field.path).isEqualTo(name)
                            assertThat(field.description).isEqualTo(description)
                            assertThat(field.type).isEqualTo(ARRAY)
                        }
@@ -204,7 +204,7 @@ object RestDocsDSLSpec
                                }
                            }
                            assertThat(fields).hasSize(3)
-                           assertThat(fields.map { it.path }).containsExactly("nested", "nested.array[]", "nested.array[].child")
+                           assertThat(fields.map { it.path }).containsExactly("nested", "nested.array", "nested.array[].child")
                        }
                        it("should create a nested multi level object preserving order") {
                            val fields = root {
@@ -280,7 +280,7 @@ object RestDocsDSLSpec
                                                     "[].boolean",
                                                     "[].nested",
                                                     "[].nested.child",
-                                                    "[].nested.arrayChild[]",
+                                                    "[].nested.arrayChild",
                                                     "[].nested.arrayChild[].multi",
                                                     "[].string")
                        }
