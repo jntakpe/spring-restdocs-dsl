@@ -3,10 +3,10 @@
 [![Build Status](https://travis-ci.com/jntakpe/spring-restdocs-dsl.svg?branch=master)](https://travis-ci.com/jntakpe/spring-restdocs-dsl)
 ![License](https://img.shields.io/badge/license-Apache%202-blue.svg)
 
-Provides a convenient way to document and test APIs with Spring REST Docs leveraging Kotlin DSL.
+Provides a convenient way to document and test APIs with [Spring REST Docs](https://spring.io/projects/spring-restdocs) leveraging Kotlin DSL.
 
 Our primary goal is to : 
-* Document APIs using Spring Rest Docs
+* Document APIs using [Spring REST Docs](https://spring.io/projects/spring-restdocs)
 * Preserve coherent order between JSON and documentation
 * Make API documentation code more readable
 
