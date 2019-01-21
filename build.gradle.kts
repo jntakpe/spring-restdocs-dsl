@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.serialization.js.DynamicTypeDeserializer.id
 
 plugins {
     kotlin("jvm") version "1.3.11"
+    id("com.gradle.build-scan") version "2.1"
     `maven-publish`
 }
 
@@ -69,4 +70,9 @@ publishing {
             }
         }
     }
+}
+
+buildScan {
+    termsOfServiceUrl = "https://gradle.com/terms-of-service"
+    setTermsOfServiceAgree("yes")
 }
