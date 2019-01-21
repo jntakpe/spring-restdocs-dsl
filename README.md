@@ -1,5 +1,8 @@
 # Spring REST Docs DSL
 
+[![Build Status](https://travis-ci.com/jntakpe/spring-restdocs-dsl.svg?branch=master)](https://travis-ci.com/jntakpe/spring-restdocs-dsl)
+![License](https://img.shields.io/badge/license-Apache%202-blue.svg)
+
 Provides a convenient way to document and test APIs with Spring REST Docs leveraging Kotlin DSL.
 
 Our primary goal is to : 
