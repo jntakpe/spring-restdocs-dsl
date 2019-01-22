@@ -1,10 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jetbrains.kotlin.serialization.js.DynamicTypeDeserializer.id
 
 plugins {
     kotlin("jvm") version "1.3.11"
     id("com.gradle.build-scan") version "2.1"
     `maven-publish`
+    signing
 }
 
 group = "com.github.jntakpe"
@@ -12,7 +12,7 @@ version = "0.1.2-SNAPSHOT"
 
 repositories {
     mavenLocal()
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
@@ -70,6 +70,21 @@ publishing {
             }
         }
     }
+    repositories {
+        maven {
+            setUrl("https://oss.sonatype.org/content/repositories/snapshots")
+            credentials {
+                val sonatypeUsername: String by extra
+                val sonatypePassword: String by extra
+                username = sonatypeUsername
+                password = sonatypePassword
+            }
+        }
+    }
+}
+
+signing {
+    sign(publishing.publications["mavenJava"])
 }
 
 buildScan {
