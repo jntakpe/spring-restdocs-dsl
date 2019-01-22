@@ -14,6 +14,9 @@ import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 @DslMarker
 internal annotation class RestDocsMarker
 
+/**
+ * Represent a simple field used to document non-nested fields
+ */
 internal interface Field {
 
     val name: String
@@ -26,6 +29,10 @@ internal interface Field {
     private fun FieldDescriptor.opt() = takeIf { optional }?.optional() ?: this
 }
 
+/**
+ * Represent nested field like a JSON object or an array
+ * @param basePath base path of parents objects
+ */
 @RestDocsMarker
 abstract class Nested(private val basePath: String) {
 
@@ -70,47 +77,84 @@ abstract class Nested(private val basePath: String) {
     private fun FieldDescriptor.opt() = takeIf { isOptional }?.optional() ?: this
 }
 
+/**
+ * Root JSON object
+ */
 class Root : Nested("")
 
+/**
+ * Root array
+ */
 class List(description: String) : Nested("[].") {
+
     init {
         fields.add(fieldWithPath("[]").description(description).type(ARRAY))
     }
 }
 
+/**
+ * Array field
+ */
 class Array(override val name: String, override val description: String, override val optional: Boolean, path: String)
     : Nested(path), Field {
 
     override val type = ARRAY
 }
 
+/**
+ * Boolean field
+ */
 class Bool(override val name: String, override val description: String, override val optional: Boolean) : Field {
+
     override val type = BOOLEAN
 }
 
+/**
+ * JSON field
+ */
 class Json(override val name: String, override val description: String, override val optional: Boolean, path: String)
     : Nested(path), Field {
 
     override val type = OBJECT
 }
 
+/**
+ * Null field
+ */
 class Nil(override val name: String, override val description: String, override val optional: Boolean) : Field {
+
     override val type = NULL
 }
 
+/**
+ * Number field
+ */
 class Number(override val name: String, override val description: String, override val optional: Boolean) : Field {
+
     override val type = NUMBER
 }
 
+/**
+ * String field
+ */
 class Text(override val name: String, override val description: String, override val optional: Boolean) : Field {
+
     override val type = STRING
 }
 
+/**
+ * Field without any defined type
+ */
 class Varies(override val name: String, override val description: String, override val optional: Boolean) : Field {
+
     override val type = VARIES
 }
 
+/**
+ * Documents JSON response body
+ */
 object JsonDescriptor {
+
     fun root(init: Root.() -> Unit) = Root().apply { init() }.fields
     fun list(description: String, init: List.() -> Unit) = List(description).apply { init() }.fields
 }

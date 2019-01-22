@@ -1,14 +1,16 @@
+import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.3.11"
     id("com.gradle.build-scan") version "2.1"
+    id("org.jetbrains.dokka") version "0.9.17"
     `maven-publish`
     signing
 }
 
 group = "com.github.jntakpe"
-version = "0.1.2-SNAPSHOT"
+version = "0.2.0"
 
 repositories {
     mavenLocal()
@@ -41,12 +43,34 @@ tasks {
             includeEngines = setOf("spek2")
         }
     }
+    withType<DokkaTask> {
+        outputFormat = "javadoc"
+        outputDirectory = "$buildDir/javadoc"
+        enabled = JavaVersion.current().isJava8
+    }
+}
+val sourcesJar by tasks.creating(Jar::class) {
+    dependsOn("classes")
+    archiveClassifier.set("sources")
+    from(sourceSets["main"].allSource)
+}
+val javadocJar by tasks.creating(Jar::class) {
+    dependsOn("dokka")
+    archiveClassifier.set("javadoc")
+    from(buildDir.resolve("javadoc"))
+}
+
+artifacts {
+    add("archives", sourcesJar)
+    add("archives", javadocJar)
 }
 
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
             from(components["java"])
+            artifact(sourcesJar)
+            artifact(javadocJar)
             pom {
                 name.set(project.name)
                 description.set("Provides a convenient way to document and test APIs with Spring REST Docs leveraging Kotlin DSL")
@@ -73,7 +97,15 @@ publishing {
     }
     repositories {
         maven {
-            setUrl("https://oss.sonatype.org/content/repositories/snapshots")
+            fun repositoryUrl(): String {
+                val repositoryBase = "https://oss.sonatype.org"
+                return if (project.version.toString().endsWith("SNAPSHOT")) {
+                    "$repositoryBase/content/repositories/snapshots"
+                } else {
+                    "$repositoryBase/service/local/staging/deploy/maven2"
+                }
+            }
+            setUrl(repositoryUrl())
             credentials {
                 val sonatypeUsername: String? by extra
                 val sonatypePassword: String? by extra
