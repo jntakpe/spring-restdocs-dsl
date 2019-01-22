@@ -13,6 +13,7 @@ version = "0.1.2-SNAPSHOT"
 repositories {
     mavenLocal()
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
@@ -74,8 +75,8 @@ publishing {
         maven {
             setUrl("https://oss.sonatype.org/content/repositories/snapshots")
             credentials {
-                val sonatypeUsername: String by extra
-                val sonatypePassword: String by extra
+                val sonatypeUsername: String? by extra
+                val sonatypePassword: String? by extra
                 username = sonatypeUsername
                 password = sonatypePassword
             }
