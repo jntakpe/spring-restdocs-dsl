@@ -7,8 +7,11 @@ import org.springframework.restdocs.payload.JsonFieldType
  * @see Nested
  * @see Field
  */
-class Array(override val name: String, override val description: String, override val optional: Boolean, path: String)
-    : Nested(path), Field {
+class Array(override val name: String,
+            override val description: String,
+            override val optional: Boolean,
+            override val views: Views,
+            path: String) : Nested(path), Field {
 
     override val type = JsonFieldType.ARRAY
 }

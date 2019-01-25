@@ -95,7 +95,7 @@ object NestedSpec : Spek({
                                      it("should document field with prefix") {
                                          val prefix = "parentObj."
                                          val name = "field"
-                                         val descriptor = Text(name, " Some field", false).build(prefix)
+                                         val descriptor = Text(name, " Some field", false, emptySet()).build(prefix)
                                          assertThat(descriptor.path).isEqualTo("$prefix$name")
                                      }
                                  }
