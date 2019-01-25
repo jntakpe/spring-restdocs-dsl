@@ -3,14 +3,14 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.3.11"
-    id("com.gradle.build-scan") version "2.1"
     id("org.jetbrains.dokka") version "0.9.17"
+    `build-scan`
     `maven-publish`
     signing
 }
 
 group = "com.github.jntakpe"
-version = "0.2.0"
+version = "0.2.1-SNAPSHOT"
 
 repositories {
     mavenLocal()
