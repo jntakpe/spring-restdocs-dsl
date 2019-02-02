@@ -12,36 +12,36 @@ abstract class Nested(private val basePath: String) {
 
     val fields: MutableList<FieldDescriptor> = arrayListOf()
 
-    fun array(name: String, description: String, optional: Boolean = false, views: Views = emptySet()): Array {
-        return field(Array(name, description, optional, views, arrayPath(name)))
+    fun array(name: String, description: String, vararg view: View, optional: Boolean = false): Array {
+        return field(Array(name, description, view.toSet(), optional, arrayPath(name)))
     }
 
-    fun array(name: String, description: String, optional: Boolean = false, views: Views = emptySet(), block: Array.() -> Unit): Array {
-        return nested(Array(name, description, optional, views, arrayPath(name)), block)
+    fun array(name: String, description: String, vararg view: View, optional: Boolean = false, block: Array.() -> Unit): Array {
+        return nested(Array(name, description, view.toSet(), optional, arrayPath(name)), block)
     }
 
-    fun boolean(name: String, description: String, optional: Boolean = false, views: Views = emptySet()): Bool {
-        return field(Bool(name, description, optional, views))
+    fun boolean(name: String, description: String, vararg view: View, optional: Boolean = false): Bool {
+        return field(Bool(name, description, view.toSet(), optional))
     }
 
-    fun nil(name: String, description: String, optional: Boolean = false, views: Views = emptySet()): Nil {
-        return field(Nil(name, description, optional, views))
+    fun nil(name: String, description: String, vararg view: View, optional: Boolean = false): Nil {
+        return field(Nil(name, description, view.toSet(), optional))
     }
 
-    fun number(name: String, description: String, optional: Boolean = false, views: Views = emptySet()): Number {
-        return field(Number(name, description, optional, views))
+    fun number(name: String, description: String, vararg view: View, optional: Boolean = false): Number {
+        return field(Number(name, description, view.toSet(), optional))
     }
 
-    fun string(name: String, description: String, optional: Boolean = false, views: Views = emptySet()): Text {
-        return field(Text(name, description, optional, views))
+    fun string(name: String, description: String, vararg view: View, optional: Boolean = false): Text {
+        return field(Text(name, description, view.toSet(), optional))
     }
 
-    fun json(name: String, description: String, optional: Boolean = false, views: Views = emptySet(), block: Json.() -> Unit): Json {
-        return nested(Json(name, description, optional, views, "$basePath$name."), block)
+    fun json(name: String, description: String, vararg view: View, optional: Boolean = false, block: Json.() -> Unit): Json {
+        return nested(Json(name, description, view.toSet(), optional, "$basePath$name."), block)
     }
 
-    fun varies(name: String, description: String, optional: Boolean = false, views: Views = emptySet()): Varies {
-        return field(Varies(name, description, optional, views))
+    fun varies(name: String, description: String, vararg view: View, optional: Boolean = false): Varies {
+        return field(Varies(name, description, view.toSet(), optional))
     }
 
     operator fun MutableCollection<in FieldDescriptor>.plusAssign(elements: Iterable<FieldDescriptor>) {

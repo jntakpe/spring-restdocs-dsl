@@ -17,5 +17,5 @@ object JsonDescriptor {
      * @param init function with [Root] receiver used to document JSON array fields
      * @return documented fields
      */
-    fun list(description: String, init: List.() -> Unit) = List(description).apply { init() }.fields
+    fun list(description: String, init: RootList.() -> Unit) = RootList(description).apply { init() }.fields
 }

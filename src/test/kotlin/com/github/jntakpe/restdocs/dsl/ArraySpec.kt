@@ -1,5 +1,6 @@
 package com.github.jntakpe.restdocs.dsl
 
+import com.github.jntakpe.restdocs.dsl.JsonDescriptor.list
 import org.assertj.core.api.Assertions.assertThat
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
@@ -9,7 +10,7 @@ object ArraySpec : Spek({
                             describe("An array") {
                                 context("is flat") {
                                     it("should create an array with fields and a new array field") {
-                                        val fields = JsonDescriptor.list("Simple array") {
+                                        val fields = list("Simple array") {
                                             boolean("first", "description")
                                             number("second", "description")
                                         }
@@ -21,12 +22,12 @@ object ArraySpec : Spek({
                                             number("second", "description")
                                             string("third", "description")
                                         }
-                                        val fields = JsonDescriptor.list("Simple array") { fields += predefined }
+                                        val fields = list("Simple array") { fields += predefined }
                                         assertThat(fields.map { it.path }.drop(1)).allMatch { it.startsWith("[].") }
                                                 .contains("[].first")
                                     }
                                     it("should create an array preserving order") {
-                                        val fields = JsonDescriptor.list("Simple array") {
+                                        val fields = list("Simple array") {
                                             boolean("first", "description")
                                             number("second", "description")
                                             string("third", "description")
@@ -43,7 +44,7 @@ object ArraySpec : Spek({
                                                 .containsExactly("primitiveArray")
                                     }
                                     it("should create an array with nested json") {
-                                        val fields = JsonDescriptor.list("Simple array") {
+                                        val fields = list("Simple array") {
                                             boolean("boolean", "description")
                                             json("nested", "nested") {
                                                 number("child", "child")

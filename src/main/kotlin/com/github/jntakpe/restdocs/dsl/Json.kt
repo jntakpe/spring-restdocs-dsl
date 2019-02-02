@@ -9,8 +9,8 @@ import org.springframework.restdocs.payload.JsonFieldType
  */
 class Json(override val name: String,
            override val description: String,
-           override val optional: Boolean,
            override val views: Views,
+           override val optional: Boolean,
            path: String) : Nested(path), Field {
 
     override val type = JsonFieldType.OBJECT

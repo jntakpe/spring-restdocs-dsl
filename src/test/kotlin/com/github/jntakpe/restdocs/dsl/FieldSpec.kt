@@ -11,18 +11,18 @@ object FieldSpec : Spek({
                                     it("should document field without prefix") {
                                         val name = "field"
                                         val description = "Some field"
-                                        val descriptor = Text(name, description, false, emptySet()).build("")
+                                        val descriptor = Text(name, description, emptySet(), false).build("")
                                         assertThat(descriptor.path).isEqualTo(name)
                                         assertThat(descriptor.isOptional).isFalse()
                                         assertThat(descriptor.description).isEqualTo(description)
                                     }
                                     it("should document optional field") {
-                                        val descriptor = Text("field", "Some field", true, emptySet()).build("")
+                                        val descriptor = Text("field", "Some field", emptySet(), true).build("")
                                         assertThat(descriptor.isOptional).isTrue()
                                     }
                                     it("should add view attribute") {
                                         val views = setOf(String::class, Int::class)
-                                        val descriptor = Text("field", "Some field", true, views).build("")
+                                        val descriptor = Text("field", "Some field", views, true).build("")
                                         assertThat(descriptor.attributes).isNotEmpty
                                         assertThat(descriptor.attributes[VIEWS_ATTR]).isInstanceOf(Set::class.java)
                                         assertThat(descriptor.attributes[VIEWS_ATTR] as Views).hasSameSizeAs(views).containsAll(views)

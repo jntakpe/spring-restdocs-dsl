@@ -7,7 +7,7 @@ import org.springframework.restdocs.payload.PayloadDocumentation
  * Root JSON array
  * @see Nested
  */
-class List(description: String) : Nested("[].") {
+class RootList(description: String) : Nested("[].") {
 
     init {
         fields.add(PayloadDocumentation.fieldWithPath("[]").description(description).type(JsonFieldType.ARRAY))
