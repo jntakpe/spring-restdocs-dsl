@@ -49,6 +49,7 @@ tasks {
         outputDirectory = "$buildDir/javadoc"
         enabled = JavaVersion.current().isJava8
         packageOptions(delegateClosureOf<PackageOptions> {
+            prefix = "kotlin"
             reportUndocumented = false
         })
     }
