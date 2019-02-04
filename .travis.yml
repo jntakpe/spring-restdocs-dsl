@@ -18,14 +18,14 @@ install:
 - "./travis/prepare-signing.sh $encrypted_3d4a70fea2f1_key $encrypted_3d4a70fea2f1_iv"
 script:
 - "./gradlew check --scan -s"
-- "./gradlew publish --scan -s"
+- "./gradlew build publish --scan -s"
 notifications:
   email: false
 deploy:
   provider: releases
   api_key:
     secure: hKVD9/SBJJyeGp/ID13gbMTTZDknHlB9Q8Q6WgWOvoVUM6ADWjNiR4GT7eQXkOELihGTFTjEqgYsb2jgUJWpIyuOVw6hLJXCapNMxeQcmYlBEKIVQBtpvOPo2lVZJNnlBNFo7dk/rlhxgL2rEJMZ9ima5t86kvykRzkx5M7mrlaFyiTxnHYEAeNE4sT0dnPbUadaGPfokrU98VO9OLtg4n1LkaESrILkhB1GxtwfBRGGdGvKooYM3wxIB45T8205sIxee/hb09uneOtprUjgqFbzYSCE67E9ZlhVLHo2H4FJYgzJfnTYHH+paBkSkDanUccPbQL7b8+yeGzAxf3gVAJZHvQ0FwFu/0oRMQX4Pb1dpWHJLC5wA7mu8q1QDtpQq2yDp0jXDmMNWNdnZCaBlwSZgxDg7utiVf5QtNBU74j7xmOT1GWPp3uh2RZpbpel/dmVrG3T83LJ4n9U/V3LuW2Dj5cPq6F/wWvpPH7Uu4DXfubFLKF72w/0poEPFhl01ugnJCh6yurt73NBfiqJ5Tv+9gihpoud8Fo7YKcyhFVfzBO2cbbHrxDGat7FTOXzNjRWOrjXddDHNZcEd89dwhVIsiaL68JNnTbXsXTv0sLPQMcfAp2riaRz67Mxy07NTEHrWhV7cH+zIusF1HG56G4/W608Le2k3shVpcLDwrQ=
-  file: "./build/libs/*.jar"
+  file: "build/libs/*.jar"
   skip_cleanup: true
   on:
     repo: jntakpe/spring-restdocs-dsl
