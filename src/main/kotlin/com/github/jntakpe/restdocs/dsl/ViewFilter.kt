@@ -19,4 +19,11 @@ fun List<FieldDescriptor>.withView(view: View, strict: Boolean = false) = filter
  */
 fun List<FieldDescriptor>.withoutView(view: View, strict: Boolean = false) = filter { it.views()?.contains(view)?.not() ?: !strict }
 
+/**
+ * Makes field optional if the views attribute [VIEWS_ATTR] contains the [view] parameter.
+ * @param view view to be optional
+ * @return a [FieldDescriptor] list with optional fields
+ */
+fun List<FieldDescriptor>.withOptional(view: View) = map { if (it.views()?.contains(view) == true) it.optional() else it }
+
 private fun FieldDescriptor.views() = attributes[VIEWS_ATTR] as Views?

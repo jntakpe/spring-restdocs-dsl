@@ -71,5 +71,25 @@ object ViewFieldSpec : Spek({
                                             assertThat(fields).isEmpty()
                                         }
                                     }
+                                    context("with optional") {
+                                        it("should map field to optional") {
+                                            val fields = root {
+                                                boolean("first", "description", String::class)
+                                            }.withOptional(String::class)
+                                            assertThat(fields.first().isOptional).isTrue()
+                                        }
+                                        it("should not edit field if no view specified") {
+                                            val fields = root {
+                                                boolean("first", "description")
+                                            }.withOptional(String::class)
+                                            assertThat(fields.first().isOptional).isFalse()
+                                        }
+                                        it("should not edit field if no view specified") {
+                                            val fields = root {
+                                                boolean("first", "description", Int::class)
+                                            }.withOptional(String::class)
+                                            assertThat(fields.first().isOptional).isFalse()
+                                        }
+                                    }
                                 }
                             })
