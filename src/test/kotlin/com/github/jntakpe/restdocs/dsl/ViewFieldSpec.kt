@@ -14,6 +14,12 @@ object ViewFieldSpec : Spek({
                                             }.withView(Int::class)
                                             assertThat(fields).isNotEmpty
                                         }
+                                        it("should remove field since no view specified and strict") {
+                                            val fields = root {
+                                                boolean("first", "description")
+                                            }.withView(Int::class, true)
+                                            assertThat(fields).isEmpty()
+                                        }
                                         it("should remove one field since view does not match") {
                                             val fields = root {
                                                 boolean("first", "description", String::class, Boolean::class)
@@ -39,6 +45,12 @@ object ViewFieldSpec : Spek({
                                                 boolean("first", "description")
                                             }.withoutView(Int::class)
                                             assertThat(fields).isNotEmpty
+                                        }
+                                        it("should remove field since no view specified and strict") {
+                                            val fields = root {
+                                                boolean("first", "description")
+                                            }.withoutView(Int::class, true)
+                                            assertThat(fields).isEmpty()
                                         }
                                         it("should remove one field since view does match") {
                                             val fields = root {
