@@ -1,4 +1,5 @@
 import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.dokka.gradle.PackageOptions
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -47,6 +48,9 @@ tasks {
         outputFormat = "javadoc"
         outputDirectory = "$buildDir/javadoc"
         enabled = JavaVersion.current().isJava8
+        packageOptions(delegateClosureOf<PackageOptions> {
+            reportUndocumented = false
+        })
     }
 }
 val sourcesJar by tasks.creating(Jar::class) {
