@@ -102,7 +102,7 @@ object NestedSpec : Spek({
                                      it("should document field with prefix") {
                                          val prefix = "parentObj."
                                          val name = "field"
-                                         val descriptor = Text(name, " Some field", emptySet(), false).build(prefix)
+                                         val descriptor = Text(name, " Some field", mutableSetOf(), false).build(prefix)
                                          assertThat(descriptor.path).isEqualTo("$prefix$name")
                                      }
                                  }
@@ -115,6 +115,14 @@ object NestedSpec : Spek({
                                          }
                                          assertThat(fields).hasSize(2)
                                          assertThat(fields.map { it.path }).containsExactly("nested", "nested.child")
+                                     }
+                                     it("should create a nested object propagating views to child") {
+                                         val fields = root {
+                                             json("nested", "nested object", String::class) {
+                                                 string("child", "child field")
+                                             }
+                                         }
+                                         assertThat(fields).allMatch { it.attributes.containsKey(Field.VIEWS_ATTR) }
                                      }
                                      it("should create a nested with array") {
                                          val fields = root {

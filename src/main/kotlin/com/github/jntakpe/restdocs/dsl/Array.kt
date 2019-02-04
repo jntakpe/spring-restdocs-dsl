@@ -11,7 +11,7 @@ class Array(override val name: String,
             override val description: String,
             override val views: Views,
             override val optional: Boolean,
-            path: String) : Nested(path), Field {
+            path: String) : Nested(path, views), Field {
 
     override val type = JsonFieldType.ARRAY
 }

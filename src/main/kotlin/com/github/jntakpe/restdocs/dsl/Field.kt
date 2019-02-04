@@ -40,9 +40,9 @@ internal interface Field {
      * @param path prefix to apply to field [name]
      * @return Spring REST Docs [FieldDescriptor]
      */
-    fun build(path: String) = fieldWithPath("$path$name").type(type).description(description).opt().attr()
+    fun build(path: String) = fieldWithPath("$path$name").type(type).description(description).opt().views()
 
     private fun FieldDescriptor.opt() = takeIf { optional }?.optional() ?: this
 
-    private fun FieldDescriptor.attr() = takeIf { views.isNotEmpty() }?.attributes(Attribute(VIEWS_ATTR, views)) ?: this
+    private fun FieldDescriptor.views() = takeIf { views.isNotEmpty() }?.attributes(Attribute(VIEWS_ATTR, views)) ?: this
 }
