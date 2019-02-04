@@ -2,6 +2,7 @@ package com.github.jntakpe.restdocs.dsl
 
 import com.github.jntakpe.restdocs.dsl.Field.Companion.VIEWS_ATTR
 import org.springframework.restdocs.payload.FieldDescriptor
+import org.springframework.restdocs.payload.JsonFieldType.NULL
 
 /**
  * Filters fields with the views attribute [VIEWS_ATTR] that contains the [view] parameter.
@@ -25,5 +26,12 @@ fun List<FieldDescriptor>.withoutView(view: View, strict: Boolean = false) = fil
  * @return a [FieldDescriptor] list with optional fields
  */
 fun List<FieldDescriptor>.withOptional(view: View) = map { if (it.views()?.contains(view) == true) it.optional() else it }
+
+/**
+ * Makes field null if the views attribute [VIEWS_ATTR] contains the [view] parameter.
+ * @param view view to be optional
+ * @return a [FieldDescriptor] list with null fields
+ */
+fun List<FieldDescriptor>.withNull(view: View) = map { if (it.views()?.contains(view) == true) it.type(NULL) else it }
 
 private fun FieldDescriptor.views() = attributes[VIEWS_ATTR] as Views?

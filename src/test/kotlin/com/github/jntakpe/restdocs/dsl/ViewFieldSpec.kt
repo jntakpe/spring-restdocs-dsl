@@ -4,6 +4,8 @@ import com.github.jntakpe.restdocs.dsl.JsonDescriptor.root
 import org.assertj.core.api.Assertions.assertThat
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
+import org.springframework.restdocs.payload.JsonFieldType.BOOLEAN
+import org.springframework.restdocs.payload.JsonFieldType.NULL
 
 object ViewFieldSpec : Spek({
                                 describe("A field descriptor list") {
@@ -89,6 +91,26 @@ object ViewFieldSpec : Spek({
                                                 boolean("first", "description", Int::class)
                                             }.withOptional(String::class)
                                             assertThat(fields.first().isOptional).isFalse()
+                                        }
+                                    }
+                                    context("with null") {
+                                        it("should map field to type null") {
+                                            val fields = root {
+                                                boolean("first", "description", String::class)
+                                            }.withNull(String::class)
+                                            assertThat(fields.first().type).isEqualTo(NULL)
+                                        }
+                                        it("should not edit field to null if no view specified") {
+                                            val fields = root {
+                                                boolean("first", "description")
+                                            }.withNull(String::class)
+                                            assertThat(fields.first().type).isEqualTo(BOOLEAN)
+                                        }
+                                        it("should not edit field to null if no view specified") {
+                                            val fields = root {
+                                                boolean("first", "description", Int::class)
+                                            }.withNull(String::class)
+                                            assertThat(fields.first().type).isEqualTo(BOOLEAN)
                                         }
                                     }
                                 }
