@@ -14,7 +14,7 @@ Our primary goal is to :
 
 Spring REST Docs DSL depends on Kotlin standard library and Spring REST Docs.
 
-The current release is [0.5.0](https://github.com/jntakpe/spring-restdocs-dsl/releases/tag/v0.5.0).
+The current release is [0.5.1](https://github.com/jntakpe/spring-restdocs-dsl/releases/tag/v0.5.1).
 
 #### Maven configuration
 
@@ -22,7 +22,7 @@ The current release is [0.5.0](https://github.com/jntakpe/spring-restdocs-dsl/re
 <dependency>
   <groupId>com.github.jntakpe</groupId>
   <artifactId>spring-restdocs-dsl</artifactId>
-  <version>0.5.0</version>
+  <version>0.5.1</version>
   <scope>test</scope>
 </dependency>
 ```
@@ -30,7 +30,7 @@ The current release is [0.5.0](https://github.com/jntakpe/spring-restdocs-dsl/re
 #### Gradle configuration
 
 ```groovy
-testCompile 'com.github.jntakpe:spring-restdocs-dsl:0.5.0'
+testCompile 'com.github.jntakpe:spring-restdocs-dsl:0.5.1'
 ```
 
 ## Usage
