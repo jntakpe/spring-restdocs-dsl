@@ -9,6 +9,7 @@ Our primary goal is to :
 * Document APIs using [Spring REST Docs](https://spring.io/projects/spring-restdocs)
 * Preserve coherent order between JSON and documentation
 * Make API documentation code more readable
+* Enable view filtering
 
 ## Installation
 
