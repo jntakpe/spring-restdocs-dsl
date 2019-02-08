@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "com.github.jntakpe"
-version = "0.5.2"
+version = "0.5.3"
 
 repositories {
     mavenLocal()
