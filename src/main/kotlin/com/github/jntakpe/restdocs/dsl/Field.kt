@@ -3,7 +3,6 @@ package com.github.jntakpe.restdocs.dsl
 import org.springframework.restdocs.payload.FieldDescriptor
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
-import org.springframework.restdocs.snippet.Attributes.Attribute
 
 /**
  * Represent a simple field used to document non-nested fields
@@ -40,9 +39,5 @@ internal interface Field {
      * @param path prefix to apply to field [name]
      * @return Spring REST Docs [FieldDescriptor]
      */
-    fun build(path: String) = fieldWithPath("$path$name").type(type).description(description).opt().views()
-
-    private fun FieldDescriptor.opt() = takeIf { optional }?.optional() ?: this
-
-    private fun FieldDescriptor.views() = takeIf { views.isNotEmpty() }?.attributes(Attribute(VIEWS_ATTR, views)) ?: this
+    fun build(path: String) = fieldWithPath("$path$name").type(type).description(description).opt(optional).views(views)
 }

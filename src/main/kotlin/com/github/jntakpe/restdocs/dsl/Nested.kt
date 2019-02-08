@@ -1,7 +1,7 @@
 package com.github.jntakpe.restdocs.dsl
 
 import org.springframework.restdocs.payload.FieldDescriptor
-import org.springframework.restdocs.payload.PayloadDocumentation
+import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 
 /**
  * Represent nested field like a JSON object or an array
@@ -16,8 +16,17 @@ abstract class Nested(private val basePath: String, private val views: Views = m
         return field(Array(name, description, view.toMutableSet().apply { addAll(views) }, optional, arrayPath(name)))
     }
 
-    fun array(name: String, description: String, vararg view: View, optional: Boolean = false, block: Array.() -> Unit): Array {
-        return nested(Array(name, description, view.toMutableSet().apply { addAll(views) }, optional, arrayPath(name)), block)
+    fun array(
+        name: String,
+        description: String,
+        vararg view: View,
+        optional: Boolean = false,
+        block: Array.() -> Unit
+    ): Array {
+        return nested(
+            Array(name, description, view.toMutableSet().apply { addAll(views) }, optional, arrayPath(name)),
+            block
+        )
     }
 
     fun boolean(name: String, description: String, vararg view: View, optional: Boolean = false): Bool {
@@ -36,8 +45,17 @@ abstract class Nested(private val basePath: String, private val views: Views = m
         return field(Text(name, description, view.toMutableSet().apply { addAll(views) }, optional))
     }
 
-    fun json(name: String, description: String, vararg view: View, optional: Boolean = false, block: Json.() -> Unit): Json {
-        return nested(Json(name, description, view.toMutableSet().apply { addAll(views) }, optional, "$basePath$name."), block)
+    fun json(
+        name: String,
+        description: String,
+        vararg view: View,
+        optional: Boolean = false,
+        block: Json.() -> Unit
+    ): Json {
+        return nested(
+            Json(name, description, view.toMutableSet().apply { addAll(views) }, optional, "$basePath$name."),
+            block
+        )
     }
 
     fun varies(name: String, description: String, vararg view: View, optional: Boolean = false): Varies {
@@ -60,7 +78,7 @@ abstract class Nested(private val basePath: String, private val views: Views = m
 
     private fun <T : Field> buildField(field: T) = field.apply { views.addAll(this@Nested.views) }.build(basePath)
 
-    private fun FieldDescriptor.rebase() = PayloadDocumentation.fieldWithPath("$basePath$path").type(type).description(description).opt()
-
-    private fun FieldDescriptor.opt() = takeIf { isOptional }?.optional() ?: this
+    private fun FieldDescriptor.rebase(): FieldDescriptor {
+        return fieldWithPath("$basePath$path").type(type).description(description).opt(isOptional).views(views)
+    }
 }
