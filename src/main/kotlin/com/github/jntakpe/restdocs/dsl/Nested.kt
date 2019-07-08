@@ -1,5 +1,6 @@
 package com.github.jntakpe.restdocs.dsl
 
+import com.github.jntakpe.restdocs.dsl.Field.Companion.VIEWS_ATTR
 import org.springframework.restdocs.payload.FieldDescriptor
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 
@@ -79,6 +80,7 @@ abstract class Nested(private val basePath: String, private val views: Views = m
     private fun <T : Field> buildField(field: T) = field.apply { views.addAll(this@Nested.views) }.build(basePath)
 
     private fun FieldDescriptor.rebase(): FieldDescriptor {
-        return fieldWithPath("$basePath$path").type(type).description(description).opt(isOptional).views(views)
+        val mergedViews = ((attributes[VIEWS_ATTR] as? Views ?: mutableSetOf()) + views).toMutableSet()
+        return fieldWithPath("$basePath$path").type(type).description(description).opt(isOptional).views(mergedViews)
     }
 }
