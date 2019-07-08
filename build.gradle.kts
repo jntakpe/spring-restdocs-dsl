@@ -2,15 +2,15 @@ import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.3.21"
-    id("org.jetbrains.dokka") version "0.9.17"
+    kotlin("jvm") version "1.3.41"
+    id("org.jetbrains.dokka") version "0.9.18"
     `build-scan`
     `maven-publish`
     signing
 }
 
 group = "com.github.jntakpe"
-version = "0.5.3"
+version = "0.5.4"
 
 repositories {
     mavenLocal()
@@ -20,8 +20,8 @@ repositories {
 
 dependencies {
     val springRestDocsVersion = "2.0.3.RELEASE"
-    val junitVersion = "5.3.2"
-    val spekVersion = "2.0.0-rc.1"
+    val junitVersion = "5.5.0"
+    val spekVersion = "2.0.5"
     val assertJVersion = "3.11.1"
     compile(kotlin("stdlib-jdk8"))
     compile("org.springframework.restdocs:spring-restdocs-core:$springRestDocsVersion")
