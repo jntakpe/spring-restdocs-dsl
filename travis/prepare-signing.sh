@@ -27,7 +27,6 @@ if [ "${TRAVIS_SECURE_ENV_VARS}" == true ]; then
     echo sonatypeUsername="${SONATYPE_USERNAME}" >> "$HOME/.gradle/gradle.properties"
     echo sonatypePassword="${SONATYPE_PASSWORD}" >> "$HOME/.gradle/gradle.properties"
     echo signing.secretKeyRingFile="${HOME}/.gnupg/secring.gpg" >> "$HOME/.gradle/gradle.properties"
-    cat "$HOME/.gradle/gradle.properties"
 else
     echo "Travis secure env vars not set. Skipping."
     exit 0
