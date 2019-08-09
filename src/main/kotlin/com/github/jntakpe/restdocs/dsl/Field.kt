@@ -7,7 +7,7 @@ import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 /**
  * Represent a simple field used to document non-nested fields
  */
-internal interface Field {
+interface Field {
 
     companion object {
         const val VIEWS_ATTR = "jsonViews"
