@@ -9,8 +9,19 @@ plugins {
     signing
 }
 
-group = "com.github.jntakpe"
-version = "0.5.5"
+val junitVersion by extra { "5.5.0" }
+val springRestDocsVersion by extra { "2.0.3.RELEASE" }
+val spekVersion by extra { "2.0.5" }
+val assertJVersion by extra { "3.11.1" }
+
+allprojects {
+    group = "com.github.jntakpe"
+    version = "0.5.5"
+    val junitVersion by extra { junitVersion }
+    val springRestDocsVersion by extra { springRestDocsVersion }
+    val spekVersion by extra { spekVersion }
+    val assertJVersion by extra { assertJVersion }
+}
 
 repositories {
     mavenLocal()
@@ -19,10 +30,7 @@ repositories {
 }
 
 dependencies {
-    val springRestDocsVersion = "2.0.3.RELEASE"
-    val junitVersion = "5.5.0"
-    val spekVersion = "2.0.5"
-    val assertJVersion = "3.11.1"
+
     compile(kotlin("stdlib-jdk8"))
     compile(kotlin("reflect"))
     compile("org.springframework.restdocs:spring-restdocs-core:$springRestDocsVersion")
@@ -118,9 +126,7 @@ publishing {
     }
 }
 
-signing {
-    sign(publishing.publications["mavenJava"])
-}
+signing { sign(publishing.publications["mavenJava"]) }
 
 buildScan {
     termsOfServiceUrl = "https://gradle.com/terms-of-service"

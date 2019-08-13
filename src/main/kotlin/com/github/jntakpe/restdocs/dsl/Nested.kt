@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonView
 import com.github.jntakpe.restdocs.dsl.Field.Companion.VIEWS_ATTR
 import org.springframework.restdocs.payload.FieldDescriptor
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
-import kotlin.reflect.KClass
 import kotlin.reflect.KClassifier
 import kotlin.reflect.KProperty
 import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
@@ -123,6 +122,15 @@ abstract class Nested(private val basePath: String, private val views: Views = m
             Any::class, JvmType.Object::class -> varies(property, description)
             Collection::class, List::class, Set::class -> array(property, description, of, block)
             else -> json(property, description, of, block as? Json.() -> Unit)
+        }
+    }
+
+    fun extField(type: KClassifier?, property: KProperty<*>, description: String): Field {
+        return when (type) {
+            String::class, Byte::class, ByteArray::class -> string(property, description)
+            Boolean::class -> boolean(property, description)
+            Short::class, Int::class, Long::class, Float::class, Double::class -> number(property, description)
+            else -> varies(property, description)
         }
     }
 
