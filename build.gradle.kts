@@ -24,6 +24,7 @@ dependencies {
     val spekVersion = "2.0.5"
     val assertJVersion = "3.11.1"
     compile(kotlin("stdlib-jdk8"))
+    compile(kotlin("reflect"))
     compile("org.springframework.restdocs:spring-restdocs-core:$springRestDocsVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
     testRuntime("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
@@ -123,5 +124,5 @@ signing {
 
 buildScan {
     termsOfServiceUrl = "https://gradle.com/terms-of-service"
-    setTermsOfServiceAgree("yes")
+    termsOfServiceAgree = "yes"
 }
