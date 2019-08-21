@@ -30,7 +30,6 @@ repositories {
 }
 
 dependencies {
-
     compile(kotlin("stdlib-jdk8"))
     compile(kotlin("reflect"))
     compile("org.springframework.restdocs:spring-restdocs-core:$springRestDocsVersion")
@@ -59,11 +58,13 @@ tasks {
         reportUndocumented = false
     }
 }
+
 val sourcesJar by tasks.creating(Jar::class) {
     dependsOn("classes")
     archiveClassifier.set("sources")
     from(sourceSets["main"].allSource)
 }
+
 val javadocJar by tasks.creating(Jar::class) {
     dependsOn("dokka")
     archiveClassifier.set("javadoc")

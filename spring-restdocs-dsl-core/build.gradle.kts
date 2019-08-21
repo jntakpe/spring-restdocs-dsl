@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm")
+    id("org.jetbrains.dokka")
     `maven-publish`
     signing
 }
@@ -9,6 +10,7 @@ plugins {
 repositories {
     mavenLocal()
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
@@ -20,20 +22,29 @@ dependencies {
 
 tasks { withType<KotlinCompile> { kotlinOptions { jvmTarget = "1.8" } } }
 
-
 val sourcesJar by tasks.creating(Jar::class) {
     dependsOn("classes")
     archiveClassifier.set("sources")
     from(sourceSets["main"].allSource)
 }
 
-artifacts { add("archives", sourcesJar) }
+val javadocJar by tasks.creating(Jar::class) {
+    dependsOn("dokka")
+    archiveClassifier.set("javadoc")
+    from(buildDir.resolve("javadoc"))
+}
+
+artifacts {
+    add("archives", sourcesJar)
+    add("archives", javadocJar)
+}
 
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
             from(components["java"])
             artifact(sourcesJar)
+            artifact(javadocJar)
             pom {
                 name.set(project.name)
                 description.set("Core components for spring-restdocs-dsl autodsl")
