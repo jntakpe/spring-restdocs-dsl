@@ -18,4 +18,4 @@ fun ProcessingEnvironment.error(msg: String): Nothing {
     throw IllegalStateException(msg)
 }
 
-inline fun <reified T : Annotation> RoundEnvironment.findClasses(): Set<Element> = getElementsAnnotatedWith(T::class.java)
+inline fun <reified T : Annotation> RoundEnvironment.findClassesAnnotatedBy(): Set<Element> = getElementsAnnotatedWith(T::class.java)
