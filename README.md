@@ -147,3 +147,10 @@ The previous code has few majors flaws :
 * It's cumbersome to write
 * The fields ordering is hard to maintain
 * The field prefix has to be explicit
+
+## Contributing
+
+#### Debugging kapt
+
+* In order to trigger kapt you need to execute `./gradlew kaptKotlin`
+* To enable debugging add `kapt.use.worker.api=true` and `org.gradle.caching=false` to your `gradle.properties` file
