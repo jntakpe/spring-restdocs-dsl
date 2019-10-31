@@ -11,8 +11,8 @@ plugins {
 
 val junitVersion by extra { "5.5.0" }
 val springRestDocsVersion by extra { "2.0.3.RELEASE" }
-val spekVersion by extra { "2.0.5" }
-val assertJVersion by extra { "3.11.1" }
+val spekVersion by extra { "2.0.8" }
+val assertJVersion by extra { "3.14.0" }
 
 allprojects {
     group = "com.github.jntakpe"
