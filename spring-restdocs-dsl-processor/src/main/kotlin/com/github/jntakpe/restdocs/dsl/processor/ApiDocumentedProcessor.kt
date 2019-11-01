@@ -1,7 +1,6 @@
 package com.github.jntakpe.restdocs.dsl.processor
 
 import com.github.jntakpe.restdocs.dsl.annotations.Doc
-import com.github.jntakpe.restdocs.dsl.annotations.Doc.Companion.PACKAGE
 import com.github.jntakpe.restdocs.dsl.annotations.EnableRestDocsAutoDsl
 import com.github.jntakpe.restdocs.dsl.processor.ApiDocumentedProcessor.Companion.KAPT_KOTLIN_GENERATED_OPTION_NAME
 import com.google.auto.service.AutoService
@@ -16,7 +15,7 @@ import javax.lang.model.util.Elements
  */
 @AutoService(Processor::class)
 @SupportedSourceVersion(RELEASE_8)
-@SupportedAnnotationTypes(PACKAGE)
+@SupportedAnnotationTypes(EnableRestDocsAutoDsl.PACKAGE)
 @SupportedOptions(KAPT_KOTLIN_GENERATED_OPTION_NAME)
 class ApiDocumentedProcessor : AbstractProcessor() {
 

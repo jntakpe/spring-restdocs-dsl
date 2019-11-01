@@ -10,8 +10,4 @@ import kotlin.annotation.AnnotationTarget.CLASS
 @Target(CLASS)
 @Retention(SOURCE)
 @Inherited
-annotation class Doc {
-    companion object {
-        const val PACKAGE = "com.github.jntakpe.restdocs.dsl.annotations.Doc"
-    }
-}
+annotation class Doc

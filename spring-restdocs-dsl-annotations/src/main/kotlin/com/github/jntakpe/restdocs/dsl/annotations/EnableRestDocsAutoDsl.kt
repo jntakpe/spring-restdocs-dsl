@@ -8,4 +8,8 @@ import kotlin.annotation.AnnotationTarget.CLASS
  */
 @Target(CLASS)
 @Retention(SOURCE)
-annotation class EnableRestDocsAutoDsl(val value: Array<String> = [])
+annotation class EnableRestDocsAutoDsl(val value: Array<String> = []){
+    companion object {
+        const val PACKAGE = "com.github.jntakpe.restdocs.dsl.annotations.EnableRestDocsAutoDsl"
+    }
+}
