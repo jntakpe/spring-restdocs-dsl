@@ -16,7 +16,7 @@ val assertJVersion by extra { "3.14.0" }
 
 allprojects {
     group = "com.github.jntakpe"
-    version = "0.6.0"
+    version = "0.6.1"
     val junitVersion by extra { junitVersion }
     val springRestDocsVersion by extra { springRestDocsVersion }
     val spekVersion by extra { spekVersion }
