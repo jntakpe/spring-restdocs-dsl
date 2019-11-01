@@ -44,7 +44,7 @@ class ApiDocumentedProcessor : AbstractProcessor() {
     private fun RoundEnvironment.findClassesByPackage(): List<Element> {
         return findClassesAnnotatedBy<EnableRestDocsAutoDsl>()
             .map { it.getAnnotation(EnableRestDocsAutoDsl::class.java) }
-            .flatMap { it.value.toList() }
+            .flatMap { it.packages.toList() }
             .flatMap { elements.getPackageElement(it).enclosedElements }
     }
 }
