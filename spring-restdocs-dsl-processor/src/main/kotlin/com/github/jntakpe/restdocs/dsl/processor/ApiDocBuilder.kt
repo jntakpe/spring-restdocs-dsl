@@ -23,7 +23,7 @@ class ApiDocBuilder(private val env: ProcessingEnvironment) {
         const val PACKAGE = "com.github.jntakpe.restdocs.dsl"
         const val FILENAME = "ApiDoc"
         fun Element.toApiDocProperty(): String {
-            val name = takeIf { isComplexArrayType() }?.singleParameterizedType()?.simpleName() ?: simpleName.toString()
+            val name = takeIf { isComplexArrayType() }?.singleParameterizedType()?.simpleName() ?: asType().simpleName().toString()
             return "${name.firstLetterToLowerCase()}Doc"
         }
 

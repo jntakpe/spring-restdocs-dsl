@@ -310,6 +310,21 @@ object AutoDslTest : Spek({
                     STRING, NUMBER
                 )
             }
+            it("should document nested field having name different from class name") {
+                football { year = "Creation year" }
+                differentFieldNameThanClassName { soccer = "Soccer" }
+                assertThat(differentFieldNameThanClassNameDoc.map { it.path }).containsExactly(
+                    DifferentFieldNameThanClassName::soccer.name,
+                    "${DifferentFieldNameThanClassName::soccer.name}.${Football::year.name}"
+                )
+                assertThat(differentFieldNameThanClassNameDoc.map { it.viewAttr() }).containsOnlyNulls()
+                assertThat(differentFieldNameThanClassNameDoc.map { it.isOptional }).containsOnly(false)
+                assertThat(differentFieldNameThanClassNameDoc.map { it.type }).containsExactly(OBJECT, NUMBER)
+                assertThat(differentFieldNameThanClassNameDoc.map { it.description }).containsExactly(
+                    "Soccer",
+                    "Creation year"
+                )
+            }
         }
     }
 })

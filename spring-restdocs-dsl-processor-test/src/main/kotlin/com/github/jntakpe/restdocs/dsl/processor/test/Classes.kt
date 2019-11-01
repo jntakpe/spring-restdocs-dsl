@@ -112,3 +112,9 @@ data class Unannotated(val name: String, val age: Int)
 
 @Doc
 data class UsingNotAnnotated(val unannotated: Unannotated)
+
+@Doc
+data class DifferentFieldNameThanClassName(val soccer: Football)
+
+@Doc
+data class Football(val year: Int)
