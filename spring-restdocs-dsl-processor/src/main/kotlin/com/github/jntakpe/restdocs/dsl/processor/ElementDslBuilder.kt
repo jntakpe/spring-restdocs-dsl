@@ -1,6 +1,7 @@
 package com.github.jntakpe.restdocs.dsl.processor
 
 import com.github.jntakpe.restdocs.dsl.annotations.Doc
+import com.github.jntakpe.restdocs.dsl.annotations.EnableRestDocsAutoDsl
 import com.github.jntakpe.restdocs.dsl.annotations.RestDocsAutoDslMarker
 import com.github.jntakpe.restdocs.dsl.core.DocBuilder
 import com.github.jntakpe.restdocs.dsl.processor.ApiDocBuilder.Companion.PACKAGE
@@ -22,7 +23,8 @@ import kotlin.reflect.KClassifier
 class ElementDslBuilder(
     private val element: Element,
     private val env: ProcessingEnvironment,
-    private val apiDocBuilder: ApiDocBuilder
+    private val apiDocBuilder: ApiDocBuilder,
+    private val config: List<EnableRestDocsAutoDsl>
 ) {
 
     init {
@@ -36,7 +38,9 @@ class ElementDslBuilder(
 
     private fun packageOfClass(): PackageElement = env.elementUtils.getPackageOf(element)
 
-    private fun dslFunctionName() = element.simpleName.toString().firstLetterToLowerCase()
+    private fun dslFunctionName(): String {
+        return element.simpleName.toString().removeTrailingSuffixes(config).firstLetterToLowerCase()
+    }
 
     private fun dslFunction(): FunSpec.Builder {
         return FunSpec.builder(dslFunctionName())
@@ -50,9 +54,9 @@ class ElementDslBuilder(
 
     private fun className() = "${element.simpleName}DocDsl"
 
-    private fun Element.toApiDocRef(): String = "::${toApiDocProperty()}"
+    private fun Element.toApiDocRef(): String = "::${toApiDocProperty(config)}"
 
-    private fun TypeMirror.toApiDocRef(): String = "::${toApiDocProperty()}"
+    private fun TypeMirror.toApiDocRef(): String = "::${toApiDocProperty(config)}"
 
     private fun docBuilder(): Pair<TypeSpec, List<Pair<Element, Boolean>>> {
         val properties = properties()
@@ -112,11 +116,11 @@ class ElementDslBuilder(
         return FileSpec.builder(packageOfClass().toString(), className())
             .addImport("$PACKAGE.core", "doc")
             .addImport("$PACKAGE.core", "applyDsl")
-            .addImport(PACKAGE, element.toApiDocProperty())
+            .addImport(PACKAGE, element.toApiDocProperty(config))
             .apply {
                 imports.forEach { (el, isExt) ->
-                    if (isExt) addImport(PACKAGE, el.asType().toApiDocProperty())
-                    addImport(PACKAGE, el.toApiDocProperty())
+                    if (isExt) addImport(PACKAGE, el.asType().toApiDocProperty(config))
+                    addImport(PACKAGE, el.toApiDocProperty(config))
                 }
             }
             .addFunction(dslFunction().build())

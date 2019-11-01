@@ -1,6 +1,7 @@
 package com.github.jntakpe.restdocs.dsl.processor
 
 import com.github.jntakpe.restdocs.dsl.annotations.Doc
+import com.github.jntakpe.restdocs.dsl.annotations.EnableRestDocsAutoDsl
 import com.github.jntakpe.restdocs.dsl.processor.ElementDslBuilder.Companion.kClassifierType
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
@@ -17,17 +18,22 @@ import javax.lang.model.type.TypeMirror
  * (like [OffsetDateTime] is serialized into a String most of the time)
  * and one suffixed with Doc if it comes from a third party library (e.g. Spring) and cannot be annotated with [Doc]
  */
-class ApiDocBuilder(private val env: ProcessingEnvironment) {
+class ApiDocBuilder(private val env: ProcessingEnvironment, private val config: List<EnableRestDocsAutoDsl>) {
 
     companion object {
         const val PACKAGE = "com.github.jntakpe.restdocs.dsl"
         const val FILENAME = "ApiDoc"
-        fun Element.toApiDocProperty(): String {
-            val name = takeIf { isComplexArrayType() }?.singleParameterizedType()?.simpleName() ?: asType().simpleName().toString()
-            return "${name.firstLetterToLowerCase()}Doc"
+        fun Element.toApiDocProperty(config: List<EnableRestDocsAutoDsl>): String {
+            return "${toApiDocPropertyName().removeTrailingSuffixes(config).firstLetterToLowerCase()}Doc"
         }
 
-        fun TypeMirror.toApiDocProperty(): String = "${simpleName()!!.firstLetterToLowerCase()}Type"
+        fun TypeMirror.toApiDocProperty(config: List<EnableRestDocsAutoDsl>): String {
+            return "${simpleName()!!.removeTrailingSuffixes(config).firstLetterToLowerCase()}Type"
+        }
+
+        private fun Element.toApiDocPropertyName(): String {
+            return takeIf { isComplexArrayType() }?.singleParameterizedType()?.simpleName() ?: asType().simpleName().toString()
+        }
     }
 
     val elements: MutableSet<Pair<Element, Boolean>> = mutableSetOf()
@@ -48,14 +54,14 @@ class ApiDocBuilder(private val env: ProcessingEnvironment) {
     }
 
     private fun Element.toDslProperty(delegates: CodeBlock): PropertySpec {
-        return PropertySpec.builder(toApiDocProperty(), ElementDslBuilder.fieldsType)
+        return PropertySpec.builder(toApiDocProperty(config), ElementDslBuilder.fieldsType)
             .mutable()
             .delegate(delegates)
             .build()
     }
 
     private fun TypeMirror.toDslProperty(delegates: CodeBlock): PropertySpec {
-        return PropertySpec.builder(toApiDocProperty(), kClassifierType)
+        return PropertySpec.builder(toApiDocProperty(config), kClassifierType)
             .mutable()
             .delegate(delegates)
             .build()

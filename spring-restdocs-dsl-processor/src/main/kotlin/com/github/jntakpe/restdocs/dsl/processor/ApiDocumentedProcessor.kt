@@ -31,20 +31,24 @@ class ApiDocumentedProcessor : AbstractProcessor() {
     }
 
     override fun process(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
-        val apiDocBuilder = ApiDocBuilder(processingEnv)
-        val allClasses = roundEnv.findClassesByDocAnnotation() + roundEnv.findClassesByPackage()
+        val enableRestDocsAutoDsl = roundEnv.enableRestDocsAutoDsl()
+        val apiDocBuilder = ApiDocBuilder(processingEnv, enableRestDocsAutoDsl)
+        val allClasses = roundEnv.findClassesByDocAnnotation() + enableRestDocsAutoDsl.findClassesByPackage()
         allClasses
-            .map { ElementDslBuilder(it, processingEnv, apiDocBuilder) }
+            .map { ElementDslBuilder(it, processingEnv, apiDocBuilder, enableRestDocsAutoDsl) }
             .forEach { it.build() }
         return true
     }
 
     private fun RoundEnvironment.findClassesByDocAnnotation() = findClassesAnnotatedBy<Doc>().toList()
 
-    private fun RoundEnvironment.findClassesByPackage(): List<Element> {
+    private fun List<EnableRestDocsAutoDsl>.findClassesByPackage(): List<Element> {
+        return flatMap { it.packages.toList() }
+            .flatMap { elements.getPackageElement(it).enclosedElements }
+    }
+
+    private fun RoundEnvironment.enableRestDocsAutoDsl(): List<EnableRestDocsAutoDsl> {
         return findClassesAnnotatedBy<EnableRestDocsAutoDsl>()
             .map { it.getAnnotation(EnableRestDocsAutoDsl::class.java) }
-            .flatMap { it.packages.toList() }
-            .flatMap { elements.getPackageElement(it).enclosedElements }
     }
 }
