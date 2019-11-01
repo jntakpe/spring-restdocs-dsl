@@ -11,34 +11,61 @@ Our primary goal is to :
 * Make API documentation code more readable
 * Enable view filtering
 
+This library comes with 3 levels of maturity ([AutoDsl](#AutoDsl), [Reflection](#Reflection) and [Standard](#Standard-API)),
+each one alleviating the boilerplate you need to write to document your API.
+
+## Index
+
+* [Installation](#Installation)
+* [Configuration](#Configuration)
+  * [Maven](#Maven)
+  * [Gradle](#Gradle)
+* [Usage](#Usage)
+  * [AutoDsl](#AutoDsl)
+  * [Reflection API](#Reflection)
+  * [Standard API](#Standard-API)
+  * [WebTestClient usage](#WebTestClient-usage)
+  * [Compared to vanilla RestDocs](#Standard-Spring-REST-Docs-usage)
+
 ## Installation
 
 Spring REST Docs DSL depends on Kotlin standard library and Spring REST Docs.
 
-The current release is [0.5.5](https://github.com/jntakpe/spring-restdocs-dsl/releases/tag/v0.5.5).
+The current release is [0.6.1](https://github.com/jntakpe/spring-restdocs-dsl/releases/tag/v0.6.1).
 
-#### Maven configuration
+## Configuration
+
+#### Maven
 
 ```xml
 <dependency>
   <groupId>com.github.jntakpe</groupId>
   <artifactId>spring-restdocs-dsl</artifactId>
-  <version>0.5.5</version>
+  <version>0.6.1</version>
   <scope>test</scope>
 </dependency>
 ```
 
-#### Gradle configuration
+#### Gradle
 
 ```groovy
-testCompile 'com.github.jntakpe:spring-restdocs-dsl:0.5.5'
+testImplementation 'com.github.jntakpe:spring-restdocs-dsl:0.6.1'
+```
+
+If you want to use autoDsl feature you must also add
+
+```groovy
+compileOnly 'com.github.jntakpe:spring-restdocs-dsl-annotations:0.6.1'
+compileOnly 'com.github.jntakpe:spring-restdocs-dsl-core:0.6.1'
+testImplementation 'com.github.jntakpe:spring-restdocs-dsl-core:0.6.1'
+kapt 'com.github.jntakpe:spring-restdocs-dsl-processor:0.6.1'
 ```
 
 ## Usage
 
-### Use case
+### Sample
 
-To document the following JSON : 
+Given the following JSON document : 
 
 ```json
 {
@@ -67,9 +94,148 @@ To document the following JSON :
 }
 ```
 
-### Kotlin DSL usage
+## AutoDsl
 
-Using the Kotlin DSL, we write : 
+AutoDsl generates some helper functions from your Kotlin classes.
+
+#### Configuration
+
+You can configure AutoDsl globally thanks to `@EnableRestDocsAutoDsl` annotation. It has the following options :
+
+|  Name | Kind | Description | Default |
+|:-------:|:------:|:------:|:--------:|
+|  packages  | Array<String> | Packages containing classes to generate DSL from. As an alternative you can indivually mark such classes with @Doc annotation |    empty    |
+|  trimSuffixes | Array<String> | Trims suffixes of generated DSL function e.g. PetDto is generated as `pet {}` instead of ~~`petDto {}`~~ |  empty   |
+
+**Note:** Kapt is triggered before Kotlin compilation. If you use Intellij, kapt is not currently supported. To overcome this it is recommended
+to use Gradle to build your project. To do so choose ‘Gradle’ in ‘Settings > Build, Execution, Deployment > Build Tools > Gradle > Build.
+
+#### Usage
+
+Kapt generates DSL functions you can then use like this :
+
+```kotlin
+val initDoc =  {
+    durationType = String::class
+    answerOption {
+        label = "Option's label"
+        valid = "Indicates if the option is valid"
+        id = "Option's unique identifier"
+    }
+    questionConfiguration {
+        duration = "Question's maximum duration"
+        code = "Indicates if the label should be formatted as code"
+        multipleChoice = "Indicates if question accepts multiple answers"
+    }
+    question {
+        label = "Question's label"
+        configuration = "Object containing question's configuration"
+        answerOptions = "Array containing the different possible answer options for the question"
+        answers = "Array containing the answer given by an user"
+        valid = "Field indicating if the given answer is valid"
+        id = "Question's unique identifier"
+    }
+    quizConfiguration {
+        duration = "Duration of the quiz. Equivalent of the total duration of all questions"
+        shuffled = "Indicates if the questions should be shuffled"
+    }
+    quiz {
+        module = "Module related to the quiz"
+        questions = "Array containing quiz questions"
+        configuration = "Object containing quiz configuration"
+        id = "Quiz unique identifier"
+    }
+}
+```
+
+With AutoDsl you just have to type field's description. The rest is inferred thanks to reflection.  
+
+**Note about `initDoc`** : if you use IntelliJ and chose to run your tests using JUnit, you need to call `initDoc()` method
+in either a `@BeforeAll` or a `@BeforeEach` function ; otherwise it won't get evaluated. Using Gradle works thine.
+
+**Note about external classes :** in this example we use `java.time.Duration` which we don't own.
+AutoDsl identifies those classes alongside those not picked up by `EnableRestDocsAutoDsl.packages` as external classes.  
+It then leaves you with 2 options regarding those classes :
+
+* Document their fields like others. In this case syntax differs a bit and uses [reflection](#Reflection) syntax.
+For `java.time.Duration` a durationDoc field is generated which we would initialize like :
+```kotlin
+durationDoc = root {
+    field(Duration::nano, "Nanoseconds")
+    field(Duration::seconds, "seconds")
+    field(Duration::units, "Unit")
+}
+```
+* Else you might have defined a custom way to serialize this type. In this case, for `java.time.Duration` as an example
+you can simply use the durationType field and pass it a Kotlin type matching the Json type once serialized : 
+```kotlin
+durationType = String::class
+// or if you serialize it with nanos
+durationType = Long::class
+```
+
+**Note :** in your tests you can import auto-generated FieldDescriptors e.g. given a Quiz class, you can import a quizDoc top-level property.
+
+## Reflection
+
+Reflection API brings some syntactic sugar compared to [standard usage](#Standard-API). Especially it alleviates :
+
+* Path is inferred from given KProperty e.g. instead of ~~`QuizDTO::module.name`~~ you can just pass `QuizDTO::module` 
+* Type is also inferred. You can just use the `field()` method instead of `string(), boolean(), json(), array()...`
+* View and optionality are inferred
+
+**Note :** in order to use it you must also add [kotlin-reflect](https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-reflect) to your test classpath.
+
+This enables us to write this :
+
+```kotlin
+val answerOptionDoc by obj {
+    field(AnswerOptionDTO::label, "Option's label")
+    field(AnswerOptionDTO::valid, "Indicates if the option is valid")
+    field(AnswerOptionDTO::id, "Option's unique identifier")
+}
+val questionConfigurationDoc by obj {
+    field<String>(QuestionConfigurationDTO::duration, "Question's maximum duration")
+    field(QuestionConfigurationDTO::code, "Indicates if the label should be formatted as code")
+    field(QuestionConfigurationDTO::multipleChoice, "Indicates if question accepts multiple answers")
+}
+val questionDoc by obj {
+    field(QuestionDTO::label, "Question's label")
+    field(QuestionDTO::configuration, questionConfigurationDoc, "Object containing question's configuration")
+    field(QuestionDTO::answerOptions, answerOptionDoc, "Array containing the different possible answer options for the question")
+    field(QuestionDTO::answers, "Array containing the answer given by an user")
+    field(QuestionDTO::valid, "Field indicating if the given answer is valid")
+    field(QuestionDTO::id, "Question's unique identifier")
+}
+val quizConfigurationDoc by obj {
+    field<String>(QuizConfigurationDTO::duration, "Duration of the quiz. Equivalent of the total duration of all questions")
+    field(QuizConfigurationDTO::shuffled, "Indicates if the questions should be shuffled")
+}
+val quizDoc by obj {
+    field(QuizDTO::module, "Module related to the quiz")
+    field(QuizDTO::questions, questionDoc, "Array containing quiz questions")
+    field(QuizDTO::configuration, quizConfigurationDoc, "Object containing quiz configuration")
+    field(QuizDTO::id, "Quiz unique identifier")
+}
+```
+
+If you need to document an array of something (e.g. QuizDTO) you can use : 
+
+```kotlin
+// reusing previously defined quizDoc
+val quizzesDoc by arr<QuizDTO>(quizDoc) // Description will be inferred from reified type
+// or if you want to explicitly define the description
+val explicitQuizzesDoc by arr<QuizDTO>(quizDoc, "An array of quizzes")
+```
+
+If you need to enforce JSON type of a field e.g. `java.time.Duration` you can used reified `field()` method like :
+```kotlin
+field<String>(QuestionConfigurationDTO::duration, "Question's maximum duration")
+```
+
+## Standard API
+
+Using the standard Kotlin DSL, we write : 
 
 ```kotlin
 private fun quizResponse() = responseFields(quizDesc())
@@ -105,6 +271,18 @@ private fun questionDesc() = root {
 ```
 
 It feels natural and close to JSON syntax !
+
+### WebTestClient usage
+
+In order to use those FieldDescriptors in our tests, some helpers are also provided :
+```kotlin
+// given our quizDoc previously written
+quizDoc.asList<QuizDTO>() // An array of quizzes
+quizDoc.asReq() // In request payload
+quizDoc.asResp() // In response payload
+quizDoc.asList<QuizDTO>().asResp() // Array of quizzes in response payload
+quizDoc.asList<QuizDTO>("A list of quizzes").asReq() // Array of quizzes with explicit description in request payload
+```
 
 ### Standard Spring REST Docs usage
 
@@ -148,7 +326,7 @@ The previous code has few majors flaws :
 * The fields ordering is hard to maintain
 * The field prefix has to be explicit
 
-## Contributing
+## For contributors
 
 #### Debugging kapt
 
