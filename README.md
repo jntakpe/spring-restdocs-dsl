@@ -31,7 +31,7 @@ each one alleviating the boilerplate you need to write to document your API.
 
 Spring REST Docs DSL depends on Kotlin standard library and Spring REST Docs.
 
-The current release is [0.6.1](https://github.com/jntakpe/spring-restdocs-dsl/releases/tag/v0.6.1).
+The current release is [0.6.2](https://github.com/jntakpe/spring-restdocs-dsl/releases/tag/v0.6.2).
 
 ## Configuration
 
@@ -41,7 +41,7 @@ The current release is [0.6.1](https://github.com/jntakpe/spring-restdocs-dsl/re
 <dependency>
   <groupId>com.github.jntakpe</groupId>
   <artifactId>spring-restdocs-dsl</artifactId>
-  <version>0.6.1</version>
+  <version>0.6.2</version>
   <scope>test</scope>
 </dependency>
 ```
@@ -49,16 +49,16 @@ The current release is [0.6.1](https://github.com/jntakpe/spring-restdocs-dsl/re
 #### Gradle
 
 ```groovy
-testImplementation 'com.github.jntakpe:spring-restdocs-dsl:0.6.1'
+testImplementation 'com.github.jntakpe:spring-restdocs-dsl:0.6.2'
 ```
 
 If you want to use autoDsl feature you must also add
 
 ```groovy
-compileOnly 'com.github.jntakpe:spring-restdocs-dsl-annotations:0.6.1'
-compileOnly 'com.github.jntakpe:spring-restdocs-dsl-core:0.6.1'
-testImplementation 'com.github.jntakpe:spring-restdocs-dsl-core:0.6.1'
-kapt 'com.github.jntakpe:spring-restdocs-dsl-processor:0.6.1'
+compileOnly 'com.github.jntakpe:spring-restdocs-dsl-annotations:0.6.2'
+compileOnly 'com.github.jntakpe:spring-restdocs-dsl-core:0.6.2'
+testImplementation 'com.github.jntakpe:spring-restdocs-dsl-core:0.6.2'
+kapt 'com.github.jntakpe:spring-restdocs-dsl-processor:0.6.2'
 ```
 
 ## Usage
